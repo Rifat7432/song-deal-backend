@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 1
+    },
+    "auditLog": "C:\\Users\\mdrif\\Desktop\\projects\\songDay-backend\\winston\\success\\.36163e38e35e07f3f0692f849b876855278002a8-audit.json",
+    "files": [
+        {
+            "date": 1763328274986,
+            "name": "C:\\Users\\mdrif\\Desktop\\projects\\songDay-backend\\winston\\success\\17-11-2025-03-success.log",
+            "hash": "58d3bf3a02b19d30c28881ef6dc3e1d98e22983f59ecf0b19374217fb0cb1a90"
+        }
+    ],
+    "hashType": "sha256"
+}
