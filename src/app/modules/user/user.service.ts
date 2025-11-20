@@ -15,8 +15,8 @@ const createUserToDB = async (payload: IUser): Promise<IUser> => {
      if (user) {
           throw new AppError(StatusCodes.CONFLICT, 'Email already exists');
      }
-     if(![USER_ROLES.ARTIST,USER_ROLES.INVESTOR].includes(payload.role)){
-throw new AppError(StatusCodes.BAD_REQUEST,"")
+     if (![USER_ROLES.ARTIST, USER_ROLES.INVESTOR].includes(payload.role)) {
+          throw new AppError(StatusCodes.BAD_REQUEST, '');
      }
      const createUser = await User.create(payload);
      if (!createUser) {
@@ -42,7 +42,6 @@ throw new AppError(StatusCodes.BAD_REQUEST,"")
 
      return createUser;
 };
-
 
 // get user profile
 const getUserProfileFromDB = async (user: JwtPayload): Promise<Partial<IUser>> => {

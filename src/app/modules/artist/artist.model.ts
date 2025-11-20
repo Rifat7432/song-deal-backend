@@ -24,11 +24,11 @@ const SocialMediasSchema = new Schema(
 
 const ArtistSchema = new Schema(
      {
-          fullname: { type: String, required: true },
+          fullname: { type: String,default:"" },
           email: { type: String, required: true, unique: true },
-          phoneNumber: { type: String, required: true },
-          country: { type: String, required: true },
-          city: { type: String, required: true },
+          phoneNumber: { type: String, default: '' },
+          country: { type: String, default: '' },
+          city: { type: String, default: '' },
           bio: { type: String, default: '' },
           profilePicture: { type: String, default: '' },
           coverImage: { type: String, default: '' },

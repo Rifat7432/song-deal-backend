@@ -43,7 +43,7 @@ const CatalogSchema = new Schema(
           genre: { type: String, default: '' },
           shortDescription: { type: String, default: '' },
           releaseYear: { type: String, default: '' },
-          track: { type: TrackSchema, required: true },
+          track: { type: [TrackSchema], required: true },
           rights: { type: RightsDocumentSchema, required: true },
           masterRights: { type: Number, default: 0 },
           publishingRights: { type: Number, default: 0 },

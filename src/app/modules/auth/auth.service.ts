@@ -13,6 +13,9 @@ import generateOTP from '../../../utils/generateOTP';
 import cryptoToken from '../../../utils/cryptoToken';
 import { verifyToken } from '../../../utils/verifyToken';
 import { createToken } from '../../../utils/createToken';
+import { USER_ROLES } from '../../../enums/user';
+import { Artist } from '../artist/artist.model';
+import { Investor } from '../investor/investor.model';
 
 //login
 const loginUserFromDB = async (payload: ILoginData) => {
@@ -145,7 +148,19 @@ const verifyEmailToDB = async (payload: IVerifyEmail) => {
      let accessToken;
      let user;
      if (!isExistUser.verified) {
-          await User.findOneAndUpdate({ _id: isExistUser._id }, { verified: true, authentication: { oneTimeCode: null, expireAt: null } });
+          const currentUser = await User.findOneAndUpdate({ _id: isExistUser._id }, { verified: true, authentication: { oneTimeCode: null, expireAt: null } });
+          if (USER_ROLES.ARTIST === currentUser?.role) {
+               await Artist.create({
+                    email: currentUser.email,
+                    userId: currentUser._id,
+               });
+          }
+          if (USER_ROLES.INVESTOR === currentUser?.role) {
+               await Investor.create({
+                    email: currentUser.email,
+                    userId: currentUser._id,
+               });
+          }
           //create token
           accessToken = jwtHelper.createToken({ id: isExistUser._id, role: isExistUser.role, email: isExistUser.email }, config.jwt.jwt_secret as Secret, config.jwt.jwt_expire_in as string);
           message = 'Email verify successfully';

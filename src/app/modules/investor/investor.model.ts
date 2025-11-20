@@ -14,9 +14,9 @@ const SocialMediasSchema = new Schema(
 
 const InvestorSchema = new Schema(
      {
-          fullname: { type: String, required: true },
+          fullname: { type: String, default: '' },
           email: { type: String, required: true, unique: true },
-          phoneNumber: { type: String, required: true },
+          phoneNumber: { type: String, default: '' },
           investmentInterests: { type: String, default: '' },
           companyName: { type: String, default: '' },
           bio: { type: String, default: '' },
