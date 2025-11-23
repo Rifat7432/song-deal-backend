@@ -1,0 +1,25 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 1
+    },
+    "auditLog": "C:\\Users\\mdrif\\Desktop\\projects\\song-deal-backend\\winston\\success\\.4adbbda48797a0c398918fa9ed78bd6a380e3afb-audit.json",
+    "files": [
+        {
+            "date": 1763767770093,
+            "name": "C:\\Users\\mdrif\\Desktop\\projects\\song-deal-backend\\winston\\success\\22-11-2025-05-success.log",
+            "hash": "e56adb300bcb64c82ee05537254a2b0eeeb27cca4cbf106a8aa54c2543316200"
+        },
+        {
+            "date": 1763841691631,
+            "name": "C:\\Users\\mdrif\\Desktop\\projects\\song-deal-backend\\winston\\success\\23-11-2025-02-success.log",
+            "hash": "0d53042c77b001f054a6fa0d2278fdc9b7cdfc00551f7e5859f002e6be2dbec6"
+        },
+        {
+            "date": 1763852491106,
+            "name": "C:\\Users\\mdrif\\Desktop\\projects\\song-deal-backend\\winston\\success\\23-11-2025-05-success.log",
+            "hash": "520ffa2e2601438f207590383e2fb290fe32009c46ca85bc1254844b3711b448"
+        }
+    ],
+    "hashType": "sha256"
+}
