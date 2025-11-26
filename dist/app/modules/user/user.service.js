@@ -20,6 +20,7 @@ const emailTemplate_1 = require("../../../shared/emailTemplate");
 const user_model_1 = require("./user.model");
 const AppError_1 = __importDefault(require("../../../errors/AppError"));
 const generateOTP_1 = __importDefault(require("../../../utils/generateOTP"));
+const artist_model_1 = require("../artist/artist.model");
 // create user
 const createUserToDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     //set role
@@ -28,7 +29,7 @@ const createUserToDB = (payload) => __awaiter(void 0, void 0, void 0, function* 
         throw new AppError_1.default(http_status_codes_1.StatusCodes.CONFLICT, 'Email already exists');
     }
     if (![user_1.USER_ROLES.ARTIST, user_1.USER_ROLES.INVESTOR].includes(payload.role)) {
-        throw new AppError_1.default(http_status_codes_1.StatusCodes.BAD_REQUEST, "");
+        throw new AppError_1.default(http_status_codes_1.StatusCodes.BAD_REQUEST, '');
     }
     const createUser = yield user_model_1.User.create(payload);
     if (!createUser) {
@@ -49,16 +50,20 @@ const createUserToDB = (payload) => __awaiter(void 0, void 0, void 0, function* 
         expireAt: new Date(Date.now() + 3 * 60000),
     };
     yield user_model_1.User.findOneAndUpdate({ _id: createUser._id }, { $set: { authentication } });
-    return createUser;
+    return {
+        data: null,
+        message: createUser.role === user_1.USER_ROLES.ARTIST ? 'Artist Account created successfully. Please verify your email' : 'Investor Account created successfully. Please verify your email',
+    };
 });
 // get user profile
 const getUserProfileFromDB = (user) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = user;
     const isExistUser = yield user_model_1.User.isExistUserById(id);
+    const artist = yield artist_model_1.Artist.findOne({ userId: id });
     if (!isExistUser) {
         throw new AppError_1.default(http_status_codes_1.StatusCodes.BAD_REQUEST, "User doesn't exist!");
     }
-    return isExistUser;
+    return { user: isExistUser, artist };
 });
 // update user profile
 const updateProfileToDB = (user, payload) => __awaiter(void 0, void 0, void 0, function* () {

@@ -8,8 +8,9 @@ import { IUser } from './user.interface';
 import { User } from './user.model';
 import AppError from '../../../errors/AppError';
 import generateOTP from '../../../utils/generateOTP';
+import { Artist } from '../artist/artist.model';
 // create user
-const createUserToDB = async (payload: IUser): Promise<IUser> => {
+const createUserToDB = async (payload: IUser) => {
      //set role
      const user = await User.isExistUserByEmail(payload.email);
      if (user) {
@@ -40,18 +41,22 @@ const createUserToDB = async (payload: IUser): Promise<IUser> => {
      };
      await User.findOneAndUpdate({ _id: createUser._id }, { $set: { authentication } });
 
-     return createUser;
+     return {
+          data: null,
+          message: createUser.role === USER_ROLES.ARTIST ? 'Artist Account created successfully. Please verify your email' : 'Investor Account created successfully. Please verify your email',
+     };
 };
 
 // get user profile
-const getUserProfileFromDB = async (user: JwtPayload): Promise<Partial<IUser>> => {
+const getUserProfileFromDB = async (user: JwtPayload) => {
      const { id } = user;
      const isExistUser = await User.isExistUserById(id);
+     const artist = await Artist.findOne({ userId: id });
      if (!isExistUser) {
           throw new AppError(StatusCodes.BAD_REQUEST, "User doesn't exist!");
      }
 
-     return isExistUser;
+     return {user:isExistUser,artist};
 };
 
 // update user profile

@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { Secret } from 'jsonwebtoken';
+import { JwtPayload, Secret } from 'jsonwebtoken';
 import config from '../../config';
 import AppError from '../../errors/AppError';
 import { verifyToken } from '../../utils/verifyToken';
@@ -11,20 +11,18 @@ const auth =
      (...roles: string[]) =>
      async (req: Request, res: Response, next: NextFunction) => {
           try {
-               const token = req.headers.authorization;
-               if (!token) {    
+               const tokenWithBearer = req.headers.authorization;
+
+               if (!tokenWithBearer) {
                     throw new AppError(StatusCodes.UNAUTHORIZED, 'You are not authorized !!');
                }
-               // if (!tokenWithBearer.startsWith('Bearer')) {
-               //      throw new AppError(StatusCodes.UNAUTHORIZED, 'Token send is not valid !!');
-               // }
-
-               // if (tokenWithBearer && tokenWithBearer.startsWith('Bearer')) {
+               if (!tokenWithBearer.startsWith('Bearer')) {
+                    throw new AppError(StatusCodes.UNAUTHORIZED, 'Token send is not valid !!');
+               }
+               const token = tokenWithBearer.split(' ')[1];
                if (token) {
-                    // const token = tokenWithBearer.split(' ')[1];
-
                     //verify token
-                    let verifyUser: any;
+                    let verifyUser: JwtPayload;
                     try {
                          verifyUser = verifyToken(token, config.jwt.jwt_secret as Secret);
                     } catch (error) {
@@ -42,7 +40,7 @@ const auth =
                     }
 
                     if (user?.isDeleted) {
-                         throw new AppError(StatusCodes.FORBIDDEN, 'This user accaunt is deleted !!');
+                         throw new AppError(StatusCodes.FORBIDDEN, 'This user account is deleted !!');
                     }
 
                     //guard user
@@ -53,6 +51,8 @@ const auth =
                     //set user to header
                     req.user = verifyUser;
                     next();
+               } else {
+                    throw new AppError(StatusCodes.UNAUTHORIZED, 'You are not authorized !!');
                }
           } catch (error) {
                next(error);

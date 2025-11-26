@@ -19,16 +19,15 @@ const verifyToken_1 = require("../../utils/verifyToken");
 const user_model_1 = require("../modules/user/user.model");
 const auth = (...roles) => (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const token = req.headers.authorization;
-        if (!token) {
+        const tokenWithBearer = req.headers.authorization;
+        if (!tokenWithBearer) {
             throw new AppError_1.default(http_status_codes_1.StatusCodes.UNAUTHORIZED, 'You are not authorized !!');
         }
-        // if (!tokenWithBearer.startsWith('Bearer')) {
-        //      throw new AppError(StatusCodes.UNAUTHORIZED, 'Token send is not valid !!');
-        // }
-        // if (tokenWithBearer && tokenWithBearer.startsWith('Bearer')) {
+        if (!tokenWithBearer.startsWith('Bearer')) {
+            throw new AppError_1.default(http_status_codes_1.StatusCodes.UNAUTHORIZED, 'Token send is not valid !!');
+        }
+        const token = tokenWithBearer.split(' ')[1];
         if (token) {
-            // const token = tokenWithBearer.split(' ')[1];
             //verify token
             let verifyUser;
             try {
@@ -46,7 +45,7 @@ const auth = (...roles) => (req, res, next) => __awaiter(void 0, void 0, void 0,
                 throw new AppError_1.default(http_status_codes_1.StatusCodes.FORBIDDEN, 'This user is blocked !!');
             }
             if (user === null || user === void 0 ? void 0 : user.isDeleted) {
-                throw new AppError_1.default(http_status_codes_1.StatusCodes.FORBIDDEN, 'This user accaunt is deleted !!');
+                throw new AppError_1.default(http_status_codes_1.StatusCodes.FORBIDDEN, 'This user account is deleted !!');
             }
             //guard user
             if (roles.length && !roles.includes(verifyUser === null || verifyUser === void 0 ? void 0 : verifyUser.role)) {
@@ -55,6 +54,9 @@ const auth = (...roles) => (req, res, next) => __awaiter(void 0, void 0, void 0,
             //set user to header
             req.user = verifyUser;
             next();
+        }
+        else {
+            throw new AppError_1.default(http_status_codes_1.StatusCodes.UNAUTHORIZED, 'You are not authorized !!');
         }
     }
     catch (error) {

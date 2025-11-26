@@ -8,7 +8,12 @@ const verifyEmail = catchAsync(async (req, res) => {
      const { ...verifyData } = req.body;
      const result = await AuthService.verifyEmailToDB(verifyData);
 
-     sendResponse(res, { success: true, statusCode: StatusCodes.OK, message: result.message, data: { verifyToken: result.verifyToken, accessToken: result.accessToken } });
+     sendResponse(res, {
+          success: true,
+          statusCode: StatusCodes.OK,
+          message: result.message,
+          data: { verifyToken: result.verifyToken, accessToken: result.accessToken, ...(result.user?.email ? { email: result.email } : {}) },
+     });
 });
 
 const loginUser = catchAsync(async (req, res) => {
@@ -46,7 +51,7 @@ const resetPasswordByUrl = catchAsync(async (req, res) => {
      sendResponse(res, { success: true, statusCode: StatusCodes.OK, message: 'Your password has been successfully reset.', data: result });
 });
 const resetPassword = catchAsync(async (req, res) => {
-     const token: any = req.headers.resetToken;
+     const token: any = req.headers.resettoken;
      const { ...resetData } = req.body;
      const result = await AuthService.resetPasswordToDB(token!, resetData);
 

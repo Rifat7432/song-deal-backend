@@ -41,34 +41,77 @@ export const TrackSchema = z.object({
 });
 
 // ===========================
-// Base Catalog Schema (shared)
+// Base Catalog Schema
+// (Matches Mongoose)
 // ===========================
 export const CatalogBaseSchema = z.object({
-     title: z.string().min(1),
-     primaryArtist: z.string().optional().default(''),
-     language: z.string().optional().default(''),
-     genre: z.string().optional().default(''),
-     shortDescription: z.string().optional().default(''),
-     releaseYear: z.string().optional().default(''),
-     track: z.array(TrackSchema).min(1, 'At least one track is required'),
-     rights: RightsDocumentSchema,
-     masterRights: z.number().optional().default(0),
-     publishingRights: z.number().optional().default(0),
-     askingPrice: z.number().optional().default(0),
-     investmentGoal: z.number().optional().default(0),
-     listingDuration: z.string().optional().default(''),
-     status: CatalogStatusEnum.optional().default('PENDING'),
+     body: z
+          .object({
+               title: z.string().min(1),
+               primaryArtist: z.string(),
+               language: z.string(),
+
+               // FIXED: Mongoose uses string[]
+               genre: z.array(z.string()),
+
+               shortDescription: z.string(),
+               releaseYear: z.string(),
+
+               track: z.array(TrackSchema).min(1, 'At least one track is required'),
+               rights: RightsDocumentSchema,
+
+               masterRights: z.number(),
+               publishingRights: z.number(),
+
+               askingPrice: z.number(),
+               investmentGoal: z.number(),
+
+               listingDuration: z.string(),
+               status: z.never().optional(),
+               isDeleted: z.never().optional(),
+               userId: z.never().optional(),
+          })
+          .strip(),
 });
 
 // ===========================
 // Create Catalog (Full)
 // ===========================
-const CreateCatalogSchema = CatalogBaseSchema;
+export const CreateCatalogSchema = CatalogBaseSchema;
 
 // ===========================
 // Update Catalog (Partial)
-// Allow updating any field EXCEPT userId and status logic is handled in service
 // ===========================
-const UpdateCatalogSchema = CatalogBaseSchema.partial();
+export const UpdateCatalogSchema = z.object({
+     body: z
+          .object({
+               title: z.string().min(1).optional(),
+               primaryArtist: z.string().optional(),
+               language: z.string().optional(),
 
-export const CatalogValidation = { CreateCatalogSchema, UpdateCatalogSchema };
+               // FIXED: Mongoose uses string[]
+               genre: z.array(z.string()).optional(),
+
+               shortDescription: z.string().optional(),
+               releaseYear: z.string().optional(),
+
+               track: z.array(TrackSchema).min(1, 'At least one track is required').optional(),
+               rights: RightsDocumentSchema.optional(),
+
+               masterRights: z.number().optional(),
+               publishingRights: z.number().optional(),
+
+               askingPrice: z.number().optional(),
+               investmentGoal: z.number().optional(),
+
+               listingDuration: z.string().optional(),
+               status: z.never().optional(),
+               isDeleted: z.never().optional(),
+          })
+          .strip(),
+});
+
+export const CatalogValidation = {
+     CreateCatalogSchema,
+     UpdateCatalogSchema,
+};

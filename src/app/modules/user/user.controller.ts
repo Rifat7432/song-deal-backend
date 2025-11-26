@@ -11,8 +11,8 @@ const createUser = catchAsync(async (req, res) => {
      sendResponse(res, {
           success: true,
           statusCode: StatusCodes.OK,
-          message: 'Investor Account User created successfully',
-          data: result,
+          message: result.message,
+          data: result.data,
      });
 });
 
@@ -51,18 +51,7 @@ const updateProfile = catchAsync(async (req, res) => {
 //delete profile
 const deleteProfile = catchAsync(async (req, res) => {
      const { id }: any = req.user;
-     const { password } = req.body;
-     const isUserVerified = await UserService.verifyUserPassword(id, password);
-     if (!isUserVerified) {
-          return sendResponse(res, {
-               success: false,
-               statusCode: StatusCodes.UNAUTHORIZED,
-               message: 'Incorrect password. Please try again.',
-          });
-     }
-
      const result = await UserService.deleteUser(id);
-
      sendResponse(res, {
           success: true,
           statusCode: StatusCodes.OK,

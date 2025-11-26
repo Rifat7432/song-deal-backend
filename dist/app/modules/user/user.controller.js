@@ -36,8 +36,8 @@ const createUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_codes_1.StatusCodes.OK,
-        message: 'Investor Account User created successfully',
-        data: result,
+        message: result.message,
+        data: result.data,
     });
 }));
 const getUserProfile = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -71,15 +71,6 @@ const updateProfile = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
 //delete profile
 const deleteProfile = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.user;
-    const { password } = req.body;
-    const isUserVerified = yield user_service_1.UserService.verifyUserPassword(id, password);
-    if (!isUserVerified) {
-        return (0, sendResponse_1.default)(res, {
-            success: false,
-            statusCode: http_status_codes_1.StatusCodes.UNAUTHORIZED,
-            message: 'Incorrect password. Please try again.',
-        });
-    }
     const result = yield user_service_1.UserService.deleteUser(id);
     (0, sendResponse_1.default)(res, {
         success: true,

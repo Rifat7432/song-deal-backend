@@ -79,9 +79,6 @@ userSchema.statics.isExistUserById = (id) => __awaiter(void 0, void 0, void 0, f
 userSchema.statics.isExistUserByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
     return yield exports.User.findOne({ email });
 });
-userSchema.statics.isExistUserByPhone = (contact) => __awaiter(void 0, void 0, void 0, function* () {
-    return yield exports.User.findOne({ contact });
-});
 // Password Matching
 userSchema.statics.isMatchPassword = (password, hashPassword) => __awaiter(void 0, void 0, void 0, function* () {
     return yield bcrypt_1.default.compare(password, hashPassword);

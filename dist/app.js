@@ -19,7 +19,7 @@ app.use(morgen_1.Morgan.successHandler);
 app.use(morgen_1.Morgan.errorHandler);
 //body parser
 app.use((0, cors_1.default)({
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", "https://song-deal.vercel.app"],
     credentials: true,
 }));
 app.use(express_1.default.json());

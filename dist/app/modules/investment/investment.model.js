@@ -37,7 +37,7 @@ const mongoose_1 = __importStar(require("mongoose"));
 const investmentSchema = new mongoose_1.Schema({
     investorId: {
         type: mongoose_1.Schema.Types.ObjectId,
-        ref: 'Investor',
+        ref: 'User',
         required: true
     },
     catalogId: {

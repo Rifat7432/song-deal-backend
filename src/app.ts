@@ -18,7 +18,7 @@ app.use(Morgan.errorHandler);
 //body parser
 app.use(
      cors({
-          origin: "http://localhost:3000",
+          origin: ["http://localhost:3000","https://song-deal.vercel.app"],
           credentials: true,
      }),
 );

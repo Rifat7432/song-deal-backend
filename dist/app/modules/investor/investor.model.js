@@ -1,83 +1,28 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
 Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose_1 = __importStar(require("mongoose"));
-const investorSchema = new mongoose_1.Schema({
-    userId: {
-        type: mongoose_1.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    },
-    fullName: {
-        type: String,
-        required: true
-    },
-    profilePicture: String,
-    coverImage: String,
-    phoneNumber: String,
-    companyName: String,
-    companyBio: String,
-    // Social Links
-    linkedIn: String,
-    // Investment Preferences
-    investmentInterests: [{
-            type: String,
-            enum: ['Pop', 'Rock', 'Hip-Hop', 'Electronic', 'Jazz', 'Classical', 'Country', 'R&B']
-        }],
-    investmentRange: {
-        type: String,
-        enum: ['$1k-$10k', '$10k-$50k', '$50k-$100k', '$1k-$10k', '$100k+'],
-        required: true
-    },
-    // Investor Stats
-    totalInvestments: {
-        type: Number,
-        default: 0
-    },
-    totalInvested: {
-        type: Number,
-        default: 0
-    },
-    portfolioValue: {
-        type: Number,
-        default: 0
-    },
-    status: {
-        type: String,
-        enum: ['active', 'suspended', 'confirmed'],
-        default: 'active'
-    }
-}, { timestamps: true });
-const Investor = mongoose_1.default.model('Investor', investorSchema);
+exports.Investor = void 0;
+const mongoose_1 = require("mongoose");
+const SocialMediasSchema = new mongoose_1.Schema({
+    facebook: { type: String, default: '' },
+    twitter: { type: String, default: '' },
+    instagram: { type: String, default: '' },
+    linkedin: { type: String, default: '' },
+    tiktok: { type: String, default: '' },
+    soundCloud: { type: String, default: '' },
+}, { _id: false });
+const InvestorSchema = new mongoose_1.Schema({
+    fullname: { type: String, default: '' },
+    email: { type: String, required: true, unique: true },
+    phoneNumber: { type: String, default: '' },
+    investmentInterests: { type: String, default: '' },
+    companyName: { type: String, default: '' },
+    bio: { type: String, default: '' },
+    profilePicture: { type: String, default: '' },
+    coverImage: { type: String, default: '' },
+    investmentRange: { type: String, default: '' },
+    socialMedias: { type: SocialMediasSchema, default: {} },
+    userId: { type: mongoose_1.Schema.Types.ObjectId, ref: 'User', required: true },
+}, {
+    timestamps: true, // Adds createdAt and updatedAt
+});
+exports.Investor = (0, mongoose_1.model)('Investor', InvestorSchema);

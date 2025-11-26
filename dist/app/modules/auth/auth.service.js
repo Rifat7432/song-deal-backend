@@ -26,6 +26,9 @@ const generateOTP_1 = __importDefault(require("../../../utils/generateOTP"));
 const cryptoToken_1 = __importDefault(require("../../../utils/cryptoToken"));
 const verifyToken_1 = require("../../../utils/verifyToken");
 const createToken_1 = require("../../../utils/createToken");
+const user_1 = require("../../../enums/user");
+const artist_model_1 = require("../artist/artist.model");
+const investor_model_1 = require("../investor/investor.model");
 //login
 const loginUserFromDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = payload;
@@ -137,21 +140,33 @@ const verifyEmailToDB = (payload) => __awaiter(void 0, void 0, void 0, function*
     let accessToken;
     let user;
     if (!isExistUser.verified) {
-        yield user_model_1.User.findOneAndUpdate({ _id: isExistUser._id }, { verified: true, authentication: { oneTimeCode: null, expireAt: null } });
+        const currentUser = yield user_model_1.User.findOneAndUpdate({ _id: isExistUser._id }, { verified: true, authentication: { oneTimeCode: null, expireAt: null } });
+        if (user_1.USER_ROLES.ARTIST === (currentUser === null || currentUser === void 0 ? void 0 : currentUser.role)) {
+            yield artist_model_1.Artist.create({
+                email: currentUser.email,
+                userId: currentUser._id,
+            });
+        }
+        if (user_1.USER_ROLES.INVESTOR === (currentUser === null || currentUser === void 0 ? void 0 : currentUser.role)) {
+            yield investor_model_1.Investor.create({
+                email: currentUser.email,
+                userId: currentUser._id,
+            });
+        }
         //create token
         accessToken = jwtHelper_1.jwtHelper.createToken({ id: isExistUser._id, role: isExistUser.role, email: isExistUser.email }, config_1.default.jwt.jwt_secret, config_1.default.jwt.jwt_expire_in);
         message = 'Email verify successfully';
         user = yield user_model_1.User.findById(isExistUser._id);
     }
     else {
-        yield user_model_1.User.findOneAndUpdate({ _id: isExistUser._id }, { authentication: { isResetPassword: true, oneTimeCode: null, expireAt: null } });
+        user = yield user_model_1.User.findOneAndUpdate({ _id: isExistUser._id }, { authentication: { isResetPassword: true, oneTimeCode: null, expireAt: null } });
         //create token ;
         const createToken = (0, cryptoToken_1.default)();
         yield resetToken_model_1.ResetToken.create({ user: isExistUser._id, token: createToken, expireAt: new Date(Date.now() + 5 * 60000) });
         message = 'Verification Successful: Please securely store and utilize this code for reset password';
         verifyToken = createToken;
     }
-    return { verifyToken, message, accessToken, user };
+    return { verifyToken, message, accessToken, user, email: user === null || user === void 0 ? void 0 : user.email };
 });
 //reset password
 const resetPasswordToDB = (token, payload) => __awaiter(void 0, void 0, void 0, function* () {

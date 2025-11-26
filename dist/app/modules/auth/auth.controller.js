@@ -30,9 +30,15 @@ const sendResponse_1 = __importDefault(require("../../../shared/sendResponse"));
 const auth_service_1 = require("./auth.service");
 const config_1 = __importDefault(require("../../../config"));
 const verifyEmail = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
     const verifyData = __rest(req.body, []);
     const result = yield auth_service_1.AuthService.verifyEmailToDB(verifyData);
-    (0, sendResponse_1.default)(res, { success: true, statusCode: http_status_codes_1.StatusCodes.OK, message: result.message, data: { verifyToken: result.verifyToken, accessToken: result.accessToken } });
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_codes_1.StatusCodes.OK,
+        message: result.message,
+        data: Object.assign({ verifyToken: result.verifyToken, accessToken: result.accessToken }, (((_a = result.user) === null || _a === void 0 ? void 0 : _a.email) ? { email: result.email } : {})),
+    });
 }));
 const loginUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const loginData = __rest(req.body, []);
@@ -62,7 +68,7 @@ const resetPasswordByUrl = (0, catchAsync_1.default)((req, res) => __awaiter(voi
     (0, sendResponse_1.default)(res, { success: true, statusCode: http_status_codes_1.StatusCodes.OK, message: 'Your password has been successfully reset.', data: result });
 }));
 const resetPassword = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const token = req.headers.resetToken;
+    const token = req.headers.resettoken;
     const resetData = __rest(req.body, []);
     const result = yield auth_service_1.AuthService.resetPasswordToDB(token, resetData);
     (0, sendResponse_1.default)(res, { success: true, statusCode: http_status_codes_1.StatusCodes.OK, message: 'Your password has been successfully reset.', data: result });

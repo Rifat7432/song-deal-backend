@@ -166,7 +166,7 @@ const verifyEmailToDB = async (payload: IVerifyEmail) => {
           message = 'Email verify successfully';
           user = await User.findById(isExistUser._id);
      } else {
-          await User.findOneAndUpdate({ _id: isExistUser._id }, { authentication: { isResetPassword: true, oneTimeCode: null, expireAt: null } });
+         user = await User.findOneAndUpdate({ _id: isExistUser._id }, { authentication: { isResetPassword: true, oneTimeCode: null, expireAt: null } });
 
           //create token ;
           const createToken = cryptoToken();
@@ -174,7 +174,7 @@ const verifyEmailToDB = async (payload: IVerifyEmail) => {
           message = 'Verification Successful: Please securely store and utilize this code for reset password';
           verifyToken = createToken;
      }
-     return { verifyToken, message, accessToken, user };
+     return { verifyToken, message, accessToken, user,email:user?.email };
 };
 
 //reset password

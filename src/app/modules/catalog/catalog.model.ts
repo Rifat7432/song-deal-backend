@@ -1,5 +1,6 @@
 import { model, Schema } from 'mongoose';
 import { IRoyaltySplit, IRightsDocument, ITrack, ICatalog } from './catalog.interface'; // <-- adjust import path
+import { boolean } from 'zod';
 
 // ============================
 // Sub-schema: Royalty Splits
@@ -65,6 +66,10 @@ const CatalogSchema = new Schema<ICatalog>(
 
           status: { type: String, enum: ['APPROVED', 'REJECTED', 'PENDING'], default: 'PENDING' },
           listingDuration: { type: String, default: '' },
+          isDeleted: {
+               type: Boolean,
+               default: false,
+          },
      },
      {
           timestamps: true,
